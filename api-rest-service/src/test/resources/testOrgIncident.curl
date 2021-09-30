@@ -1,0 +1,8 @@
+# Add incidentIds to incident
+curl -vvv -XPOST -H "Content-type: application/json" -H "CUSTOM-uid: user@ll.mit.edu" -d '[{"orgid":1, "incidentid":1, "userid":1}]' http://localhost:8080/em-api/v1/incidents/1/orgs/1
+
+# Get incidentIds
+curl -v -XGET -H "Content-type: application/json"  http://localhost:8080/em-api/v1/incidents/1/orgs/1
+
+# Delete
+curl -v -XPOST -H "Content-type: application/json" -H "CUSTOM-uid: user@ll.mit.edu" -d '[{"orgid":1, "incidentid":1, "userid":1}]'  http://localhost:8080/em-api/v1/incidents/1/orgs/remove/1

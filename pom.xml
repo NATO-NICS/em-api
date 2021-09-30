@@ -1,0 +1,468 @@
+<!--
+
+    Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.
+
+    2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+    3. Neither the name of the copyright holder nor the names of its contributors
+    may be used to endorse or promote products derived from this software without
+    specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>edu.mit.ll.em.api</groupId>
+  <artifactId>em-api</artifactId>
+  <version>7.0.9-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>EM-API</name>
+  <description>Emergency Management API (EM-API) provides rest endpoints that
+    support the NICS web client as well as the NICS mobile application. Once
+    deployed, em-api can be accessed from your server via /em-api/v1/
+  </description>
+  <url>https://github.com/NATO-NICS/em-api</url>
+  <inceptionYear>2015</inceptionYear>
+
+  <properties>
+    <!-- Dependency Versions -->
+    <amqpClientVersion>5.8.0</amqpClientVersion>
+    <commonsLang3Version>3.9</commonsLang3Version>
+    <cxfVersion>3.3.5</cxfVersion>
+    <geotoolsVersion>22.3</geotoolsVersion>
+    <gsonVersion>2.8.6</gsonVersion>
+    <esapiVersion>2.2.0.0</esapiVersion>
+    <jacksonVersion>2.10.1</jacksonVersion>
+    <logbackVersion>1.2.3</logbackVersion>
+    <javaxWsRsApiVersion>2.1.1</javaxWsRsApiVersion>
+    <jerseyVersion>2.30</jerseyVersion>
+    <jettyVersion>9.4.26.v20200117</jettyVersion>
+    <postgresqlVersion>42.2.9</postgresqlVersion>
+    <restAssuredVersion>4.3.0</restAssuredVersion> <!--4.1.2-->
+    <restEasyVersion>3.11.2.Final</restEasyVersion> <!--3.6.1.SP2, but also new breaking version out 4.5.x-->
+    <springVersion>5.2.3.RELEASE</springVersion>
+    <swaggerVersion>3.38.0</swaggerVersion>
+    <testngVersion>7.1.0</testngVersion>
+
+    <!-- Plugin Versions -->
+    <licenseMavenPluginVersion>3.0</licenseMavenPluginVersion>
+    <mavenCheckstylePluginVersion>3.0.0</mavenCheckstylePluginVersion>
+    <mavenJettyPluginVersion>9.4.26.v20200117</mavenJettyPluginVersion> <!--TODO: looks like it's the same version as the jetty server-->
+    <mavenCompilerPluginVersion>3.8.1</mavenCompilerPluginVersion>
+    <mavenSurefirePluginVersion>2.22.2</mavenSurefirePluginVersion>
+    <mavenWarPluginVersion>3.2.3</mavenWarPluginVersion>
+
+    <!-- Project Properties -->
+    <javaSourceVersion>1.8</javaSourceVersion>
+    <javaTargetVersion>1.8</javaTargetVersion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <modules>
+    <module>api-rest-common</module>
+    <module>api-rest-service</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Internal Dependencies -->
+      <dependency>
+        <groupId>edu.mit.ll.em.api</groupId>
+        <artifactId>api-rest-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mit.ll.nics.common</groupId>
+        <artifactId>entities</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mit.ll.nics.common</groupId>
+        <artifactId>nics-dao</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mit.ll.nics.common</groupId>
+        <artifactId>geoserver-rest-api</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>edu.mit.ll.nics.common</groupId>
+        <artifactId>web-service-request-lib</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mit.ll.nics.common</groupId>
+        <artifactId>rabbitmq-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mit.ll.nics.common</groupId>
+        <artifactId>xml-email</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.mit.ll.nics.tools</groupId>
+        <artifactId>image-processing</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- END Internal Dependencies -->
+
+      <!-- GeoTools -->
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-main</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-referencing</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-geometry</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-extension</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-cql</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-hsql</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools.jdbc</groupId>
+        <artifactId>gt-jdbc-postgis</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-opengis</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-shapefile</artifactId>
+        <version>${geotoolsVersion}</version>
+      </dependency>
+      <!-- END GeoTools-->
+
+      <!-- External -->
+      <dependency>
+        <groupId>com.rabbitmq</groupId>
+        <artifactId>amqp-client</artifactId>
+        <version>${amqpClientVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logbackVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${gsonVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>javax.ws.rs-api</artifactId>
+        <version>${javaxWsRsApiVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${postgresqlVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.owasp.esapi</groupId>
+        <artifactId>esapi</artifactId>
+        <version>${esapiVersion}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.jaxrs</groupId>
+        <artifactId>jackson-jaxrs-json-provider</artifactId>
+        <version>${jacksonVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jacksonVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jacksonVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>${jettyVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-util-ajax</artifactId>
+        <version>${jettyVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+        <version>${cxfVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        <version>${cxfVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.core</groupId>
+        <artifactId>jersey-client</artifactId>
+        <version>${jerseyVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commonsLang3Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-client</artifactId>
+        <version>${restEasyVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>swagger-ui</artifactId>
+        <version>${swaggerVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
+        <version>${cxfVersion}</version>
+      </dependency>
+
+
+      <!-- END External Dependencies -->
+
+      <!-- Testing -->
+      <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>${testngVersion}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>${restAssuredVersion}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>json-path</artifactId>
+        <version>${restAssuredVersion}</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- END Testing -->
+
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!--<plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${mavenCheckstylePluginVersion}</version>
+          <dependencies>
+            <dependency>
+              <groupId>edu.mit.ll.nics.tools</groupId>
+              <artifactId>nics-checkstyle</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>verify</id>
+              <phase>verify</phase>
+              <configuration>
+                <configLocation>google_checks_nics.xml</configLocation>
+                <encoding>UTF-8</encoding>
+                <consoleOutput>true</consoleOutput>
+                <failsOnError>false</failsOnError>
+              </configuration>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>-->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${mavenSurefirePluginVersion}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>${mavenJettyPluginVersion}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>${mavenWarPluginVersion}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${mavenCompilerPluginVersion}</version>
+          <configuration>
+            <source>${javaSourceVersion}</source>
+            <target>${javaTargetVersion}</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>${licenseMavenPluginVersion}</version>
+          <configuration>
+            <aggregate>true</aggregate>
+            <header>copyright.txt</header>
+            <strictCheck>true</strictCheck>
+            <properties>
+              <year>2021</year>
+            </properties>
+            <useDefaultExcludes>false</useDefaultExcludes>
+
+            <!-- Additional file-to-comment-style mappings -->
+            <mapping>
+			  <java>SLASHSTAR_STYLE</java>
+              <xslt>XML_STYLE</xslt>
+            </mapping>
+
+            <excludes>
+              <!-- Some default excludes -->
+              <exclude>**/*~</exclude>
+              <exclude>**/*.jar</exclude>
+              <exclude>**/*.zip</exclude>
+              <exclude>**/*.tar*</exclude>
+              <exclude>**/*.pdf</exclude>
+              <exclude>**/*.jpg</exclude>
+              <exclude>**/*.png</exclude>
+              <exclude>**/*.gif</exclude>
+              <exclude>**/*.ico</exclude>
+              <exclude>**/*.bmp</exclude>
+              <exclude>**/*.tif*</exclude>
+              <exclude>**/*.cr2</exclude>
+              <exclude>**/MANIFEST.MF</exclude>
+              <exclude>**/.classpath</exclude>
+              <exclude>**/.project</exclude>
+              <exclude>**/.settings/**</exclude>
+              <exclude>**/target/**</exclude>
+              <exclude>**/test-output/**</exclude>
+              <exclude>**/META-INF/services/**</exclude>
+              <exclude>**/.git</exclude>
+              <exclude>**/.gitignore</exclude>
+              <exclude>**/.git/**</exclude>
+              <exclude>**/*.log</exclude>
+              <exclude>**/*.txt</exclude>
+              <exclude>**/*.json</exclude>
+              <exclude>**/*.curl</exclude>
+              <exclude>**/*.md</exclude>
+
+              <!-- Project-specific excludes -->
+            </excludes>
+          </configuration>
+          <inherited>true</inherited>
+          <executions>
+            <execution>
+              <id>update-copyright</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>format</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>verify-copyright</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>check</goal>
+                </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>${licenseMavenPluginVersion}</version>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+      <!-- Placeholder for checkstyle reporting if we go that route -->
+  </reporting>
+
+  <repositories>
+    <repository>
+      <id>osgeo-geotools</id>
+      <name>OSGeo Geotools</name>
+      <url>http://download.osgeo.org/webdav/geotools</url>
+    </repository>
+    <repository>
+      <id>osgeo-alt</id>
+      <url>https://repo.osgeo.org/repository/release/</url>
+    </repository>
+  </repositories>
+</project>

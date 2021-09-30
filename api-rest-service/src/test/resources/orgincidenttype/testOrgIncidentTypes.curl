@@ -1,0 +1,8 @@
+# Add
+curl -v -XPOST -H "Content-type: application/json" -H "CUSTOM-uid: tester@ll.mit.edu" http://localhost:8080/em-api/v1/orgs/1/incidenttype/add/{orgId}/{incidentTypeId}
+
+# Get, path
+curl -v -XGET -H "Content-type: application/json" -H "CUSTOM-uid: tester@ll.mit.edu" http://localhost:8080/em-api/v1/orgs/1/incidenttype/{orgId}
+
+# Remove
+curl -v -XDELETE -H "Content-type: application/json" -H "CUSTOM-uid: tester@ll.mit.edu" http://localhost:8080/em-api/v1/orgs/1/incidenttype/remove/{orgId}/{incidentTypeId}

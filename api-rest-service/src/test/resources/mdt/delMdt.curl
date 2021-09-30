@@ -1,0 +1,1 @@
+curl -vvv -H "X-Remote-User: tester@ll.mit.edu" -H "Content-type: application/json; charset=UTF-8" -X DELETE "https://[EM-API-HOST]/em-api/v1/mdtracks/1/user/tester@ll.mit.edu/device/[DEVICEID]"

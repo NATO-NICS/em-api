@@ -1,0 +1,121 @@
+<!--
+
+    Copyright (c) 2008-2021, Massachusetts Institute of Technology (MIT)
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.
+
+    2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+    3. Neither the name of the copyright holder nor the names of its contributors
+    may be used to endorse or promote products derived from this software without
+    specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+   
+<suite name="EM-API Tests" verbose="1" >
+
+    <groups>
+        <define name="all">
+            <include name="connectivity" />
+            <include name="write" />
+        </define>
+    </groups>
+
+    <!-- Global Default Properties. For test specific changes, place them inside your local test element -->
+    <!-- TODO: I believe you can also create properties files to populate these so we're not editing xml as much -->
+
+    <!-- Proxy Configuration -->
+    <parameter name="proxyEnabled" value="false" /> <!-- true or false -->
+    <parameter name="proxyScheme" value="http" /> <!-- http or https -->
+    <parameter name="proxyHost" value="llproxy.llan.ll.mit.edu" />
+    <parameter name="proxyPort" value="8080" />
+    <parameter name="proxyUsername" value="" />
+    <parameter name="proxyPassword" value="" />
+
+    <!--
+        API Parameters results in: http://localhost:8080/em-api/v1/
+
+        DO NOT MODIFY
+
+        If you need to make changes, please do so within your test element
+    -->
+    <parameter name="protocol" value="" />
+    <parameter name="host" value="localhost" />
+    <parameter name="port" value="8080" />
+    <parameter name="apiRoot" value="" />
+
+    <!-- OpenAM Authentication details -->
+    <parameter name="openamRequired" value="false" />
+    <parameter name="openamAuthUrl" value="https://nics6-identity1.nics.ll.mit.edu/openam/json/authenticate" />
+    <parameter name="openamContentType" value="application/json" />
+    <parameter name="openamCookieName" value="iPlanetDirectoryPro" />
+    <parameter name="openamResponseTokenKey" value="tokenId" />
+    <parameter name="openamUsernameHeader" value="X-OpenAM-Username" />
+    <parameter name="openamPasswordHeader" value="X-OpenAM-Password" />
+    <!-- TODO: need a default test user that's in openam and in the baseline schema or something -->
+    <parameter name="openamUsername" value="test@ll.mit.edu" />
+    <parameter name="openamPassword" value="PASSWORD" />
+
+
+    <!-- Keycloak Authentication details -->
+    <!-- TODO: may just bypass keycloak as well, and hit 8080 on localhost -->
+    <parameter name="keycloakRequired" value="true" />
+    <parameter name="keycloakAuthUrl" value="https://nics6-identity1.nics.ll.mit.edu/keycloak/json/authenticate" />
+    <parameter name="keycloakContentType" value="application/json" />
+    <parameter name="keycloakCookieName" value="iPlanetDirectoryPro" />
+    <parameter name="keycloakResponseTokenKey" value="tokenId" />
+    <parameter name="keycloakUsernameHeader" value="X-keycloak-Username" />
+    <parameter name="keycloakPasswordHeader" value="X-keycloak-Password" />
+    <!-- TODO: need a default test user that's in keycloak and in the baseline schema or something -->
+    <parameter name="keycloakUsername" value="test@ll.mit.edu" />
+    <parameter name="keycloakPassword" value="PASSWORD" />
+    <parameter name="keycloakRemoteUserHeader" value="X-Remote-User"></parameter>
+    <parameter name="keycloakRemoteUser" value="test.user@ll.mit.edu"/>
+
+    <!-- Endpoint Tests -->
+
+    <test name="ExampleServiceTest" enabled="false"> <!-- Disabling, as it's just meant as an example to start from -->
+
+        <!-- Override global parameters here, if you need to alter them for your test -->
+        <!-- Example change -->
+        <parameter name="protocol" value="https" />
+
+        <classes>
+            <class name="edu.mit.ll.em.api.test.endpoint.example.ExampleEndpointTest" />
+        </classes>
+    </test>
+
+
+    <test name="MDTrackServiceTest" enabled="true">
+        <classes>
+            <class name="edu.mit.ll.em.api.test.endpoint.mdt.MobileDeviceTrackServiceEndpointTest" />
+        </classes>
+    </test>
+
+    <test name="MediaStreamServiceTest" enabled="true">
+        <!--<parameter name="" value=""/>-->
+
+        <classes>
+            <class name="edu.mit.ll.em.api.test.endpoint.mediastream.MediaStreamServiceEndpointTest" />
+        </classes>
+    </test>
+</suite>

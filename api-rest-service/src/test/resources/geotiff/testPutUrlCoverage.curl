@@ -1,0 +1,9 @@
+# Add a geotiff
+curl -v -XPOST -H "Content-type: multipart/form-data" -F displayName=Testing1 -H "CUSTOM-uid: user@ll.mit.edu" -F "filename=@geotiff1.tif;type=image/tif" http://localhost:8080/em-api/v1/datalayer/1/geotiff
+
+# Adds isMosaic query parameter, and adds a zip containing images
+curl -v -XPOST -H "Content-type: multipart/form-data" -F displayName=Testing2 -H "CUSTOM-uid: user@ll.mit.edu" -F "filename=@multi.zip;type=application/zip" http://localhost:8080/em-api/v1/datalayer/1/geotiff?isMosaic=true
+
+# To create a store and layer from a file that already exists on the mapserver itself, you'd maket the same call, but instead, the filename attribute wouldn't use the @, and it'd be the absolute path to the file on the
+# mapserver.
+curl -v -XPOST -H "Content-type: multipart/form-data" -F displayName=Testing1 -H "CUSTOM-uid: user@ll.mit.edu" -F "filename=/opt/data/nics/geoserver/geotiff1.tif" http://localhost:8080/em-api/v1/datalayer/1/geotiff
